@@ -1,4 +1,5 @@
 import Container from '@/components/Container';
+import Reviews from '@/components/Rewiew/Reviews';
 import { Check, Star } from 'lucide-react';
 import Image from 'next/image';
 
@@ -261,6 +262,10 @@ export default function Home() {
                     </div>
                 </Container>
             </section>
+
+            {/* reviews */}
+
+            <Reviews />
         </div>
     );
 }
