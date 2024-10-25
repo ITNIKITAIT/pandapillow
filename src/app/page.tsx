@@ -1,12 +1,14 @@
 import Container from '@/components/Container';
 import Reviews from '@/components/Rewiew/Reviews';
-import { Check, Star } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { ArrowRight, Check, Star } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home() {
     return (
         <div>
-            <section className="bg-slate-50">
+            <section className="bg-slate-50 pt-4">
                 <Container>
                     <div className="flex justify-between flex-col sm:gap-10 items-center py-16 sm:py-24 lg:flex-row lg:gap-0">
                         <div className="relative max-w-full lg:max-w-[540px] xl:max-w-[700px]">
@@ -266,6 +268,79 @@ export default function Home() {
             {/* reviews */}
 
             <Reviews />
+
+            <section className="py-24 bg-slate-50">
+                <Container>
+                    <div className="mb-12 px-6 lg:px-8">
+                        <div className="mx-auto max-w-3xl sm:text-center">
+                            <h2 className="order-1 tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-gray-900">
+                                Upload you photo and get{' '}
+                                <span className="px-2 bg-purple-600 text-white">
+                                    your own pillow
+                                </span>{' '}
+                                now
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div className="mx-auto px-6 lg:px-8">
+                        <div className="relative flex flex-col items-center gap-6 justify-center lg:flex-row">
+                            <div className="rounded-md overflow-hidden bg-gray-900/5 ring-inset ring-gray-900/10">
+                                <Image
+                                    src="/before.png"
+                                    alt="before"
+                                    width={400}
+                                    height={400}
+                                />
+                            </div>
+                            <Image
+                                src="/arrow.png"
+                                alt="arrow"
+                                width={120}
+                                height={120}
+                                className="lg:ml-5 rotate-90 mt-10 lg:mt-0 lg:rotate-0"
+                            />
+                            <Image
+                                src="/after.png"
+                                alt="before"
+                                width={400}
+                                height={400}
+                            />
+                        </div>
+                    </div>
+
+                    <ul className="mx-auto mt-2 lg:mt-12 max-w-prose sm:text-lg space-y-2 w-fit">
+                        <li className="w-fit">
+                            <Check className="size-5 text-purple-600 inline mr-1.5" />
+                            High-quality fabric material
+                        </li>
+                        <li className="w-fit">
+                            <Check className="size-5 text-purple-600 inline mr-1.5" />
+                            Scratch and fade-resistant coating
+                        </li>
+                        <li className="w-fit">
+                            <Check className="size-5 text-purple-600 inline mr-1.5" />
+                            Machine washable and easy to maintain
+                        </li>
+                        <li className="w-fit">
+                            <Check className="size-5 text-purple-600 inline mr-1.5" />
+                            5 year print warranty
+                        </li>
+                    </ul>
+
+                    <div className="flex justify-center">
+                        <Link
+                            className={buttonVariants({
+                                className: 'flex items-center gap-2 mt-8',
+                                size: 'lg',
+                            })}
+                            href="/configure/upload">
+                            Create your case now{' '}
+                            <ArrowRight className="size-4" />
+                        </Link>
+                    </div>
+                </Container>
+            </section>
         </div>
     );
 }
