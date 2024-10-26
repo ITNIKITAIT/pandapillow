@@ -22,7 +22,7 @@ const ReviewGrid = () => {
     return (
         <div
             ref={containerRef}
-            className="relative mt-16 grid h-[750px] max-h-[130vh] gap-5 overflow-hidden px-4 sm:mt-20 grid-cols-1 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+            className="relative my-24 grid h-[750px] max-h-[130vh] gap-5 overflow-hidden px-4 sm:my-20 grid-cols-1 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             {isInView && (
                 <>
                     <ReviewCol pillows={[...columns[0]]} speed={10} />
