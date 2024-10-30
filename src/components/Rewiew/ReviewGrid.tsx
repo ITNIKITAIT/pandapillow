@@ -1,5 +1,5 @@
 'use client';
-import { splitArray } from '@/lib/splitArray';
+import { splitArray } from '@/lib/utils';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import ReviewCol from './ReviewCol';

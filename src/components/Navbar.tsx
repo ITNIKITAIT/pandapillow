@@ -9,7 +9,7 @@ const Navbar = () => {
             <Container>
                 <div className="flex h-14 items-center justify-between">
                     <Link href="/" className="font-semibold text-2xl">
-                        Cat<span className="text-violet-600">Pillow</span>
+                        Panda<span className="text-violet-600">Pillow</span>
                     </Link>
 
                     <div className="flex items-center gap-1 h-full sm:gap-5">
