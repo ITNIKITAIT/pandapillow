@@ -43,7 +43,6 @@ const Page = () => {
         startUpload(acceptedFiles, { configId: undefined });
 
         setIsDragOver(false);
-        console.log('accepted');
     };
 
     return (

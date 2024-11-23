@@ -1,0 +1,11 @@
+Model Information:
+* title:	Pillow
+* source:	https://sketchfab.com/3d-models/pillow-90d0c49db71a48ceb3b37c30ca55cdbd
+* author:	ozybu (https://sketchfab.com/ozybu)
+
+Model License:
+* license type:	CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)
+* requirements:	Author must be credited. Modified versions must have the same license. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Pillow" (https://sketchfab.com/3d-models/pillow-90d0c49db71a48ceb3b37c30ca55cdbd) by ozybu (https://sketchfab.com/ozybu) licensed under CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)

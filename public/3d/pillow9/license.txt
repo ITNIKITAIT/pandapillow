@@ -1,0 +1,11 @@
+Model Information:
+* title:	Pillow
+* source:	https://sketchfab.com/3d-models/pillow-06284a552f4f44f99d112c3ecbe1c9cb
+* author:	rockzee (https://sketchfab.com/rockzee)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Pillow" (https://sketchfab.com/3d-models/pillow-06284a552f4f44f99d112c3ecbe1c9cb) by rockzee (https://sketchfab.com/rockzee) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
