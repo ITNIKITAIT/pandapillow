@@ -7,10 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum OrderStatus {
+  fulfilled
+  shipped
+  awaiting_shipment
+}
+
+enum Packaging {
+  standard
+  gift_wrap
+  reusable_bag
+}
+
+enum PillowFiller {
+  feather
+  polyester_fiberfill
+  cotton
+  wool
+  down
+  latex
+  memory_foam
+  silk
+}
+
 model Configuration {
-  id              String  @id @default(uuid())
+  id              String        @id @default(uuid())
   width           Int
   height          Int
   imageUrl        String
   croppedImageUrl String?
+  filler          PillowFiller?
+  packaging       Packaging?
 }

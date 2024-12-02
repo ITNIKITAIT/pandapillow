@@ -17,3 +17,11 @@ export const splitArray = <T>(arr: Array<T>, num: number) => {
 
     return result;
 };
+
+export const formatPrice = (price: number) => {
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+    return formatter.format(price);
+};
