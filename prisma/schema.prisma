@@ -13,29 +13,40 @@ enum OrderStatus {
   awaiting_shipment
 }
 
-enum Packaging {
-  standard
-  gift_wrap
-  reusable_bag
+model PillowSize {
+  id             Int             @id @default(autoincrement())
+  label          String          @unique
+  width          Int
+  height         Int
+  configurations Configuration[]
 }
 
-enum PillowFiller {
-  feather
-  polyester_fiberfill
-  cotton
-  wool
-  down
-  latex
-  memory_foam
-  silk
+model PillowPackaging {
+  id             Int             @id @default(autoincrement())
+  label          String          @unique
+  description    String?
+  price          Int
+  configurations Configuration[]
+}
+
+model PillowFiller {
+  id             Int             @id @default(autoincrement())
+  label          String          @unique
+  description    String?
+  price          Int
+  configurations Configuration[]
 }
 
 model Configuration {
-  id              String        @id @default(uuid())
-  width           Int
-  height          Int
-  imageUrl        String
-  croppedImageUrl String?
-  filler          PillowFiller?
-  packaging       Packaging?
+  id                String           @id @default(uuid())
+  width             Int
+  height            Int
+  imageUrl          String
+  croppedImageUrl   String?
+  pillowFiller      PillowFiller?    @relation(fields: [pillowFillerId], references: [id])
+  pillowFillerId    Int?
+  pillowPackaging   PillowPackaging? @relation(fields: [pillowPackagingId], references: [id])
+  pillowPackagingId Int?
+  pillowSize        PillowSize?      @relation(fields: [pillowSizeId], references: [id])
+  pillowSizeId      Int?
 }
