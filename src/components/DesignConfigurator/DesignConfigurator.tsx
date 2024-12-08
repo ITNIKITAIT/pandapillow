@@ -64,40 +64,53 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
 
     const { startUpload } = useUploadThing('imageUploader');
 
+    const createCroppedImage = async () => {
+        const {
+            left: areaLeft,
+            top: areaTop,
+            width,
+            height,
+        } = pillowAreaRef.current!.getBoundingClientRect();
+        const { left: containerLeft, top: containerTop } =
+            containerRef.current!.getBoundingClientRect();
+
+        const leftOffset = areaLeft - containerLeft;
+        const topOffset = areaTop - containerTop;
+
+        const actualX = renderedPosition.x - leftOffset;
+        const actualY = renderedPosition.y - topOffset;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            throw new Error('Unable to get canvas context');
+        }
+
+        const userImage = new Image();
+        userImage.crossOrigin = 'anonymous';
+        userImage.src = imageUrl;
+
+        await new Promise((resolve) => (userImage.onload = resolve));
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx?.drawImage(
+            userImage,
+            actualX,
+            actualY,
+            renderedDimension.width,
+            renderedDimension.height
+        );
+
+        return canvas;
+    };
+
     const saveConfiguration = async () => {
         try {
-            const {
-                left: areaLeft,
-                top: areaTop,
-                width,
-                height,
-            } = pillowAreaRef.current!.getBoundingClientRect();
-            const { left: containerLeft, top: containerTop } =
-                containerRef.current!.getBoundingClientRect();
-
-            const leftOffset = areaLeft - containerLeft;
-            const topOffset = areaTop - containerTop;
-
-            const actualX = renderedPosition.x - leftOffset;
-            const actualY = renderedPosition.y - topOffset;
-
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-
-            const userImage = new Image();
-            userImage.crossOrigin = 'anonymous';
-            userImage.src = imageUrl;
-            await new Promise((resolve) => (userImage.onload = resolve));
-
-            ctx?.drawImage(
-                userImage,
-                actualX,
-                actualY,
-                renderedDimension.width,
-                renderedDimension.height
-            );
+            const canvas = await createCroppedImage();
 
             const base64 = canvas.toDataURL().split(',')[1];
 
@@ -174,7 +187,7 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
                         <Button variant="outline">View</Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-[800px] h-[500px] border-2 rounded-xl p-0 m-0">
-                        <PillowViewer userImageURL={imageUrl} />
+                        <PillowViewer createCroppedImage={createCroppedImage} />
                     </DialogContent>
                 </Dialog>
 

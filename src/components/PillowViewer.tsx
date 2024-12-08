@@ -1,9 +1,8 @@
-import React, { useRef, useEffect, Suspense } from 'react';
-import { Canvas, useLoader } from '@react-three/fiber';
+import React, { useRef, useEffect, Suspense, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF, useProgress, Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { getCroppedImage } from '@/app/configure/design/actions';
-import { useQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 
 const scaleModelToSize = (model: THREE.Object3D, targetSize: number) => {
     const bbox = new THREE.Box3().setFromObject(model);
@@ -14,46 +13,55 @@ const scaleModelToSize = (model: THREE.Object3D, targetSize: number) => {
     model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 };
 
-const FilledTexture = (image: HTMLImageElement) => {
-    const canvas = document.createElement('canvas');
-    canvas.width = image.width;
-    canvas.height = image.height;
+function Pillow({
+    createCroppedImage,
+}: {
+    createCroppedImage: () => Promise<HTMLCanvasElement>;
+}) {
+    const [userCanvas, setUserCanvas] = useState<HTMLCanvasElement | null>(
+        null
+    );
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-        throw new Error('Unable to get canvas context');
-    }
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(image, 0, 0);
-
-    return new THREE.CanvasTexture(canvas);
-};
-
-function Pillow({ userImageURL }: { userImageURL: string }) {
     const pillowRef = useRef<THREE.Group>();
-    const { scene } = useGLTF('/3d/pillow9/scene.gltf');
-    const userTexture = useLoader(THREE.TextureLoader, userImageURL);
+    const { scene } = useGLTF('/3d/pillow3/scene.gltf');
 
     useEffect(() => {
-        if (pillowRef.current) {
-            scaleModelToSize(pillowRef.current, 5);
+        const loadCanvas = async () => {
+            const canvas = await createCroppedImage();
+            setUserCanvas(canvas);
+        };
+
+        loadCanvas();
+    }, [createCroppedImage]);
+
+    useEffect(() => {
+        if (userCanvas && scene) {
+            const canvasTexture = new THREE.CanvasTexture(userCanvas);
+            scene.traverse((node) => {
+                const mesh = node as THREE.Mesh;
+                if (mesh.isMesh) {
+                    mesh.material.map = canvasTexture;
+                    mesh.material.needsUpdate = true;
+                }
+            });
+
+            const bbox = new THREE.Box3().setFromObject(scene);
+            const center = bbox.getCenter(new THREE.Vector3());
+            scene.position.sub(center);
+
+            if (pillowRef.current) {
+                scaleModelToSize(pillowRef.current, 5);
+            }
         }
-    }, [scene]);
+    }, [scene, userCanvas]);
 
-    useEffect(() => {
-        const image = userTexture.image;
-        const textureWithWhiteBackground = FilledTexture(image);
-
-        scene.traverse((node) => {
-            if ((node as THREE.Mesh).isMesh)
-                (node as THREE.Mesh).material.map = textureWithWhiteBackground;
-        });
-
-        const bbox = new THREE.Box3().setFromObject(scene);
-        const center = bbox.getCenter(new THREE.Vector3());
-        scene.position.sub(center);
-    }, [scene, userTexture]);
+    if (!userCanvas) {
+        return (
+            <Html center>
+                <Loader2 className="h-10 w-10 text-purple-600 animate-spin" />
+            </Html>
+        );
+    }
 
     return (
         <primitive
@@ -76,20 +84,17 @@ function Loader() {
     );
 }
 
-const PillowViewer = ({ userImageURL }: { userImageURL: string }) => {
-    const { data: croppedImage } = useQuery({
-        queryKey: ['croppedImage'],
-        queryFn: () => getCroppedImage(userImageURL),
-    });
-
+const PillowViewer = ({
+    createCroppedImage,
+}: {
+    createCroppedImage: () => Promise<HTMLCanvasElement>;
+}) => {
     return (
         <div>
             <Canvas>
                 <ambientLight intensity={1.5} />
                 <Suspense fallback={<Loader />}>
-                    {croppedImage?.croppedImageUrl && (
-                        <Pillow userImageURL={croppedImage?.croppedImageUrl} />
-                    )}
+                    <Pillow createCroppedImage={createCroppedImage} />
                 </Suspense>
                 <OrbitControls />
             </Canvas>
