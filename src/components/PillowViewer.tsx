@@ -23,7 +23,7 @@ function Pillow({
     );
 
     const pillowRef = useRef<THREE.Group>();
-    const { scene } = useGLTF('/3d/pillow3/scene.gltf');
+    const { scene } = useGLTF('/3d/pillow9/scene.gltf');
 
     useEffect(() => {
         const loadCanvas = async () => {
@@ -49,9 +49,9 @@ function Pillow({
             const center = bbox.getCenter(new THREE.Vector3());
             scene.position.sub(center);
 
-            if (pillowRef.current) {
-                scaleModelToSize(pillowRef.current, 5);
-            }
+            // if (pillowRef.current) {
+            //     scaleModelToSize(pillowRef.current, 5);
+            // }
         }
     }, [scene, userCanvas]);
 
