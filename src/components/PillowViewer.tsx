@@ -15,15 +15,17 @@ const scaleModelToSize = (model: THREE.Object3D, targetSize: number) => {
 
 function Pillow({
     createCroppedImage,
+    type,
 }: {
     createCroppedImage: () => Promise<HTMLCanvasElement>;
+    type: string;
 }) {
     const [userCanvas, setUserCanvas] = useState<HTMLCanvasElement | null>(
         null
     );
 
     const pillowRef = useRef<THREE.Group>();
-    const { scene } = useGLTF('/3d/pillow9/scene.gltf');
+    const { scene } = useGLTF(`/3d/pillows/${type}/scene.gltf`);
 
     useEffect(() => {
         const loadCanvas = async () => {
@@ -32,7 +34,14 @@ function Pillow({
         };
 
         loadCanvas();
-    }, [createCroppedImage]);
+
+        return () => {
+            if (scene) {
+                scene.scale.set(1, 1, 1);
+                scene.position.set(0, 0, 0);
+            }
+        };
+    }, [createCroppedImage, scene]);
 
     useEffect(() => {
         if (userCanvas && scene) {
@@ -45,13 +54,21 @@ function Pillow({
                 }
             });
 
+            if (pillowRef.current) {
+                scaleModelToSize(pillowRef.current, 5);
+            }
+
             const bbox = new THREE.Box3().setFromObject(scene);
             const center = bbox.getCenter(new THREE.Vector3());
             scene.position.sub(center);
 
-            // if (pillowRef.current) {
-            //     scaleModelToSize(pillowRef.current, 5);
-            // }
+            scene.traverse((node) => {
+                const mesh = node as THREE.Mesh;
+                if (mesh.isMesh && mesh.material.map) {
+                    mesh.material.map.dispose();
+                    mesh.material.dispose();
+                }
+            });
         }
     }, [scene, userCanvas]);
 
@@ -86,15 +103,20 @@ function Loader() {
 
 const PillowViewer = ({
     createCroppedImage,
+    type,
 }: {
     createCroppedImage: () => Promise<HTMLCanvasElement>;
+    type: string;
 }) => {
     return (
         <div>
             <Canvas>
                 <ambientLight intensity={1.5} />
                 <Suspense fallback={<Loader />}>
-                    <Pillow createCroppedImage={createCroppedImage} />
+                    <Pillow
+                        createCroppedImage={createCroppedImage}
+                        type={type}
+                    />
                 </Suspense>
                 <OrbitControls />
             </Canvas>

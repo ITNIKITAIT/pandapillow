@@ -7,7 +7,7 @@ import PillowViewer from '../PillowViewer';
 import { Button, buttonVariants } from '../ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import { useRef, useState } from 'react';
-import { base64ToBlob } from '@/lib/utils';
+import { base64ToBlob, cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useUploadThing } from '@/lib/uploadthing';
 import { useMutation } from '@tanstack/react-query';
@@ -130,16 +130,22 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
             console.log(err);
         }
     };
+    console.log(options);
 
     return (
         <>
             <div className="relative mt-20 grid lg:grid-cols-3 grid-cols-1 lg:mb-20 mb-5">
                 <div
                     ref={containerRef}
-                    className="relative h-[600px] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
+                    className="relative h-[500px] sm:h-[600px] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
                     <div
                         ref={pillowAreaRef}
-                        className="w-[65%] border-2 z-20 pointer-events-none border-red-400 shadow-[0_0_0_999px_rgba(229,231,235,0.6)] aspect-[1/1]"></div>
+                        className={cn(
+                            'w-[85%] md:w-[450px] lg:w-[450px] border-2 z-20 pointer-events-none border-red-400 shadow-[0_0_0_999px_rgba(229,231,235,0.6)]',
+                            options.size
+                                ? `aspect-[${options.size?.width}/${options.size?.height}]`
+                                : 'aspect-[1/1]'
+                        )}></div>
                     <Rnd
                         default={{
                             x: 170,
@@ -177,19 +183,24 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
                     </Rnd>
                 </div>
 
-                <Dialog>
-                    <DialogTrigger
-                        className={buttonVariants({
-                            className:
-                                'absolute top-4 left-4 z-[40] font-bold cursor-pointer hover:text-white',
-                        })}
-                        asChild>
-                        <Button variant="outline">View</Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-[800px] h-[500px] border-2 rounded-xl p-0 m-0">
-                        <PillowViewer createCroppedImage={createCroppedImage} />
-                    </DialogContent>
-                </Dialog>
+                {options.size && (
+                    <Dialog>
+                        <DialogTrigger
+                            className={buttonVariants({
+                                className:
+                                    'absolute top-4 left-4 z-[40] font-bold cursor-pointer hover:text-white',
+                            })}
+                            asChild>
+                            <Button variant="outline">View</Button>
+                        </DialogTrigger>
+                        <DialogContent className="lg:max-w-[850px] h-[550px] border-2 rounded-xl max-w-[95%]">
+                            <PillowViewer
+                                createCroppedImage={createCroppedImage}
+                                type={options.size?.label}
+                            />
+                        </DialogContent>
+                    </Dialog>
+                )}
 
                 <PriceConfigurator
                     options={options}
