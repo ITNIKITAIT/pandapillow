@@ -1,1 +1,1 @@
-Cat Pillow site)
+Panda Pillow site)
