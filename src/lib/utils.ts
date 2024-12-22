@@ -37,3 +37,22 @@ export const base64ToBlob = (base64: string, type: string) => {
     const byteArray = new Uint8Array(byteNumbers);
     return new Blob([byteArray], { type });
 };
+
+export const FilledTexture = async (imageUrl: string) => {
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.src = imageUrl;
+
+    await new Promise((resolve) => (image.onload = resolve));
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+        throw new Error('Unable to get canvas context');
+    }
+    ctx.drawImage(image, 0, 0);
+
+    return canvas;
+};

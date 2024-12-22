@@ -7,7 +7,7 @@ import PillowViewer from '../PillowViewer';
 import { Button, buttonVariants } from '../ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import { useRef, useState } from 'react';
-import { base64ToBlob, cn } from '@/lib/utils';
+import { base64ToBlob } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useUploadThing } from '@/lib/uploadthing';
 import { useMutation } from '@tanstack/react-query';
@@ -18,6 +18,7 @@ import {
 } from '@/app/configure/design/actions';
 import { Options } from './types';
 import PriceConfigurator from './PriceConfigurator';
+import { useRouter } from 'next/navigation';
 
 interface Props {
     configId: string;
@@ -32,6 +33,7 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
         size: null,
         packaging: null,
     });
+    const router = useRouter();
 
     const { mutate: saveConfig, isPending } = useMutation({
         mutationKey: ['save-config'],
@@ -47,6 +49,7 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
         },
         onSuccess: () => {
             console.log('success');
+            router.push(`/configure/preview?id=${configId}`);
         },
     });
 
@@ -140,12 +143,13 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
                     className="relative h-[500px] sm:h-[600px] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none">
                     <div
                         ref={pillowAreaRef}
-                        className={cn(
-                            'w-[85%] md:w-[450px] lg:w-[450px] border-2 z-20 pointer-events-none border-red-400 shadow-[0_0_0_999px_rgba(229,231,235,0.6)]',
-                            options.size
-                                ? `aspect-[${options.size?.width}/${options.size?.height}]`
-                                : 'aspect-[1/1]'
-                        )}></div>
+                        style={{
+                            aspectRatio: options.size
+                                ? `${options.size.width} / ${options.size.height}`
+                                : '1 / 1',
+                        }}
+                        className="w-[85%] md:w-[450px] border-2 z-20 pointer-events-none border-red-400 shadow-[0_0_0_999px_rgba(229,231,235,0.6)]"></div>
+
                     <Rnd
                         default={{
                             x: 170,

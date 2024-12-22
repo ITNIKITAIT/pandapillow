@@ -104,23 +104,20 @@ function Loader() {
 const PillowViewer = ({
     createCroppedImage,
     type,
+    isStatic,
 }: {
     createCroppedImage: () => Promise<HTMLCanvasElement>;
     type: string;
+    isStatic?: boolean;
 }) => {
     return (
-        <div>
-            <Canvas>
-                <ambientLight intensity={1.5} />
-                <Suspense fallback={<Loader />}>
-                    <Pillow
-                        createCroppedImage={createCroppedImage}
-                        type={type}
-                    />
-                </Suspense>
-                <OrbitControls />
-            </Canvas>
-        </div>
+        <Canvas>
+            <ambientLight intensity={1.5} />
+            <Suspense fallback={<Loader />}>
+                <Pillow createCroppedImage={createCroppedImage} type={type} />
+            </Suspense>
+            {!isStatic && <OrbitControls />}
+        </Canvas>
     );
 };
 

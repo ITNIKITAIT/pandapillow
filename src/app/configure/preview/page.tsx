@@ -1,7 +1,7 @@
+import { SearchParamsI } from '@/app/types';
 import { notFound } from 'next/navigation';
 import prisma from '../../../../prisma/db';
-import DesignConfigurator from '@/components/DesignConfigurator/DesignConfigurator';
-import { SearchParamsI } from '@/app/types';
+import DesignPreview from '@/components/DesignPreview/DesignPreview';
 
 const Page = async ({ searchParams }: SearchParamsI) => {
     const { id } = searchParams;
@@ -14,21 +14,18 @@ const Page = async ({ searchParams }: SearchParamsI) => {
         where: {
             id,
         },
+        include: {
+            pillowFiller: true,
+            pillowPackaging: true,
+            pillowSize: true,
+        },
     });
 
     if (!configuration) {
         return notFound();
     }
 
-    const { imageUrl, width, height } = configuration;
-
-    return (
-        <DesignConfigurator
-            imageUrl={imageUrl}
-            imageSize={{ width, height }}
-            configId={id}
-        />
-    );
+    return <DesignPreview configuration={configuration} />;
 };
 
 export default Page;

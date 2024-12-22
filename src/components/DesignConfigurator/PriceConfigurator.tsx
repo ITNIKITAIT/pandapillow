@@ -5,7 +5,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { ArrowRight, Check, ChevronsUpDown, Loader2 } from 'lucide-react';
+import { ArrowRight, Check, ChevronsUpDown } from 'lucide-react';
 import { DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 import { cn, formatPrice } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
@@ -241,12 +241,9 @@ const PriceConfigurator = ({
                         <Skeleton className="!h-8 !w-14" />
                     )}
 
-                    {isPending ? (
-                        <Button size="sm" disabled className="w-full">
-                            <Loader2 className="h-8 w-8 text-white animate-spin" />
-                        </Button>
-                    ) : !isLoading ? (
+                    {!isLoading ? (
                         <Button
+                            isPending={isPending}
                             onClick={() => {
                                 saveConfig({
                                     pillowPackagingId: options.packaging!.id,
