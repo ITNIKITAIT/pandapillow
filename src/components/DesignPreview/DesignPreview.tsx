@@ -5,12 +5,23 @@ import { FilledTexture, formatPrice } from '@/lib/utils';
 import { ArrowRight, Check } from 'lucide-react';
 import { BASE_PRICE } from '@/consts';
 import { Button } from '../ui/button';
+import { useMutation } from '@tanstack/react-query';
+import { createCheckoutSession } from '@/app/configure/preview/actions';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
+import LoginModal from '../LoginModal';
 
 type PreviewProps = Prisma.ConfigurationGetPayload<{
     include: { pillowFiller: true; pillowPackaging: true; pillowSize: true };
 }>;
 
 const DesignPreview = ({ configuration }: { configuration: PreviewProps }) => {
+    const router = useRouter();
+    const { toast } = useToast();
+
+    const [isModalLogin, setIsModalLogin] = useState<boolean>(false);
+
     const { pillowSize, pillowFiller, pillowPackaging, croppedImageUrl } =
         configuration;
 
@@ -18,8 +29,35 @@ const DesignPreview = ({ configuration }: { configuration: PreviewProps }) => {
         return BASE_PRICE + pillowFiller!.price + pillowPackaging!.price;
     };
 
+    const { mutate: createPayment, isPending } = useMutation({
+        mutationKey: ['get-checkout-session'],
+        mutationFn: createCheckoutSession,
+        onSuccess: ({ url }) => {
+            if (url) router.push(url);
+            else throw new Error('Unable to retrieve payment URL.');
+        },
+        onError: () => {
+            toast({
+                title: 'Something went wrong',
+                description: 'There was an error on our end. Please try again.',
+                variant: 'destructive',
+            });
+        },
+    });
+
+    const handleCheckout = () => {
+        const isLogin = true;
+        if (isLogin) {
+            createPayment({ configId: configuration.id });
+        } else {
+            setIsModalLogin(true);
+        }
+    };
+
     return (
         <div className="flex flex-col mt-20 md:grid grid-cols-1 md:grid-cols-6 text-sm md:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
+            <LoginModal isOpen={isModalLogin} setIsOpen={setIsModalLogin} />
+
             <div className="mt-6 sm:col-span-4 sm:mt-0 md:row-end-1">
                 <h3 className="text-3xl font-bold tracking-tight text-gray-900">
                     Your Beautifull pillow
@@ -98,7 +136,10 @@ const DesignPreview = ({ configuration }: { configuration: PreviewProps }) => {
                 </div>
 
                 <div className="mt-8 flex justify-end pb-12">
-                    <Button className="px-4 sm:px-6 lg:px-8">
+                    <Button
+                        onClick={handleCheckout}
+                        isPending={isPending}
+                        className="px-4 sm:px-6 lg:px-8 min-w-[170px]">
                         Check out{' '}
                         <ArrowRight className="h-4 w-4 ml-1.5 inline" />
                     </Button>

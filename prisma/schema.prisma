@@ -13,6 +13,15 @@ enum OrderStatus {
   awaiting_shipment
 }
 
+model User {
+  id    String  @id @default(uuid())
+  email String  @unique
+  order Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model PillowSize {
   id             Int             @id @default(autoincrement())
   label          String          @unique
@@ -49,4 +58,47 @@ model Configuration {
   pillowPackagingId Int?
   pillowSize        PillowSize?      @relation(fields: [pillowSizeId], references: [id])
   pillowSizeId      Int?
+  order             Order[]
+}
+
+model Order {
+  id                String           @id @default(uuid())
+  configuration     Configuration    @relation(fields: [configurationId], references: [id])
+  configurationId   String
+  status            OrderStatus      @default(awaiting_shipment)
+  user              User             @relation(fields: [userId], references: [id])
+  userId            String
+  amount            Float
+  isPaid            Boolean          @default(false)
+  shippingAddress   ShippingAddress? @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId String?
+  billingAddress    BillingAddress?  @relation(fields: [billingAddressId], references: [id])
+  billingAddressId  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShippingAddress {
+  id          String  @id @default(uuid())
+  name        String
+  city        String
+  street      String
+  postalCode  String
+  country     String
+  state       String?
+  phoneNumber String?
+  orders      Order[]
+}
+
+model BillingAddress {
+  id          String  @id @default(uuid())
+  name        String
+  city        String
+  street      String
+  postalCode  String
+  country     String
+  state       String?
+  phoneNumber String?
+  orders      Order[]
 }
