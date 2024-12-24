@@ -60,7 +60,7 @@ const DesignPreview = ({ configuration }: { configuration: PreviewProps }) => {
 
             <div className="mt-6 sm:col-span-4 sm:mt-0 md:row-end-1">
                 <h3 className="text-3xl font-bold tracking-tight text-gray-900">
-                    Your Beautifull pillow
+                    Your Beautiful pillow
                 </h3>
                 <div className="mt-3 flex items-center gap-1.5 text-base">
                     <Check className="h-4 w-4 text-purple-600" />
