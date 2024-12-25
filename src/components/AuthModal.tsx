@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -8,14 +8,27 @@ import {
 } from './ui/dialog';
 import Image from 'next/image';
 import { buttonVariants } from './ui/button';
+import LoginForm from './LoginForm';
 
-const LoginModal = ({
+export type AuthModalType = 'login' | 'register';
+
+const AuthModal = ({
     isOpen,
     setIsOpen,
 }: {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+    const [type, setType] = useState<AuthModalType>('login');
+
+    const onSwitchType = () => {
+        setType(type === 'login' ? 'register' : 'login');
+    };
+
+    const onClose = () => {
+        setIsOpen(false);
+    };
+
     return (
         <Dialog onOpenChange={setIsOpen} open={isOpen}>
             <DialogContent className="!p-3 !pb-5 sm:max-w-[500px] max-w-[95%] rounded-[10px]">
@@ -39,17 +52,17 @@ const LoginModal = ({
                         purchase.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="grid grid-cols-2 gap-6 divide-x divide-gray-200">
-                    <button className={buttonVariants({ variant: 'outline' })}>
-                        Login
-                    </button>
-                    <button className={buttonVariants({ variant: 'default' })}>
-                        Register
-                    </button>
-                </div>
+
+                {type === 'login' && <LoginForm onClose={onClose} />}
+
+                <button
+                    onClick={onSwitchType}
+                    className={buttonVariants({ variant: 'outline' })}>
+                    {type === 'login' ? 'Register' : 'Login'}
+                </button>
             </DialogContent>
         </Dialog>
     );
 };
 
-export default LoginModal;
+export default AuthModal;

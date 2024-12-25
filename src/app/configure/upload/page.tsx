@@ -48,7 +48,7 @@ const Page = () => {
     return (
         <div
             className={cn(
-                'relative my-10 bg-gray-900/5 w-full ring-1 ring-inset ring-gray-900/10 rounded-xl flex flex-1 justify-center flex-col items-center',
+                'relative my-10 bg-gray-900/5 min-h-[250px] w-full ring-1 ring-inset ring-gray-900/10 rounded-xl flex flex-1 justify-center flex-col items-center',
                 isDragOver && 'ring-blue-900/25 bg-blue-900/10'
             )}>
             <div className="relative flex flex-1 flex-col items-center justify-center w-full h-full">

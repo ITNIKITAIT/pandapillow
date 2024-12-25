@@ -21,16 +21,18 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${inter.className} antialiased relative`}>
-                <Navbar />
-                <main className="flex flex-col min-h-[calc(100vh-3.5rem-1px)]">
-                    <div className="flex flex-1 flex-col h-full">
-                        <Providers>{children}</Providers>
-                    </div>
+                <Providers>
+                    <Navbar />
+                    <main className="flex flex-col min-h-[calc(100vh-3.5rem-1px)]">
+                        <div className="flex flex-1 flex-col h-full">
+                            {children}
+                        </div>
 
-                    <Footer />
-                </main>
+                        <Footer />
+                    </main>
 
-                <Toaster />
+                    <Toaster />
+                </Providers>
             </body>
         </html>
     );

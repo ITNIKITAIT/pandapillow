@@ -10,7 +10,8 @@ import { createCheckoutSession } from '@/app/configure/preview/actions';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
-import LoginModal from '../LoginModal';
+import AuthModal from '../AuthModal';
+import { useSession } from 'next-auth/react';
 
 type PreviewProps = Prisma.ConfigurationGetPayload<{
     include: { pillowFiller: true; pillowPackaging: true; pillowSize: true };
@@ -19,6 +20,7 @@ type PreviewProps = Prisma.ConfigurationGetPayload<{
 const DesignPreview = ({ configuration }: { configuration: PreviewProps }) => {
     const router = useRouter();
     const { toast } = useToast();
+    const { data: isLogin } = useSession();
 
     const [isModalLogin, setIsModalLogin] = useState<boolean>(false);
 
@@ -46,7 +48,6 @@ const DesignPreview = ({ configuration }: { configuration: PreviewProps }) => {
     });
 
     const handleCheckout = () => {
-        const isLogin = true;
         if (isLogin) {
             createPayment({ configId: configuration.id });
         } else {
@@ -56,7 +57,7 @@ const DesignPreview = ({ configuration }: { configuration: PreviewProps }) => {
 
     return (
         <div className="flex flex-col mt-20 md:grid grid-cols-1 md:grid-cols-6 text-sm md:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
-            <LoginModal isOpen={isModalLogin} setIsOpen={setIsModalLogin} />
+            <AuthModal isOpen={isModalLogin} setIsOpen={setIsModalLogin} />
 
             <div className="mt-6 sm:col-span-4 sm:mt-0 md:row-end-1">
                 <h3 className="text-3xl font-bold tracking-tight text-gray-900">

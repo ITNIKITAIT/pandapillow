@@ -5,7 +5,6 @@ import DesignPreview from '@/components/DesignPreview/DesignPreview';
 
 const Page = async ({ searchParams }: SearchParamsI) => {
     const { id } = searchParams;
-
     if (!id || typeof id !== 'string') {
         return notFound();
     }

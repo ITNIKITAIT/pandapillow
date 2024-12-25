@@ -48,7 +48,6 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
             });
         },
         onSuccess: () => {
-            console.log('success');
             router.push(`/configure/preview?id=${configId}`);
         },
     });
@@ -133,7 +132,6 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
             console.log(err);
         }
     };
-    console.log(options);
 
     return (
         <>
