@@ -7,8 +7,10 @@ import {
     DialogTitle,
 } from './ui/dialog';
 import Image from 'next/image';
-import { buttonVariants } from './ui/button';
+import { Button, buttonVariants } from './ui/button';
 import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
+import { signIn } from 'next-auth/react';
 
 export type AuthModalType = 'login' | 'register';
 
@@ -54,6 +56,22 @@ const AuthModal = ({
                 </DialogHeader>
 
                 {type === 'login' && <LoginForm onClose={onClose} />}
+                {type === 'register' && <RegisterForm onClose={onClose} />}
+
+                <div className="h-[1px] w-[60%] bg-zinc-300 my-3 mx-auto"></div>
+
+                <Button
+                    variant="secondary"
+                    className="flex items-center gap-2 justify-center"
+                    onClick={() => signIn('google', { redirect: false })}>
+                    <Image
+                        src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
+                        alt="google"
+                        width={24}
+                        height={24}
+                    />
+                    Google
+                </Button>
 
                 <button
                     onClick={onSwitchType}

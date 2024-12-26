@@ -129,7 +129,7 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
                     'There was a problem savimg your config, please try again',
                 variant: 'destructive',
             });
-            console.log(err);
+            console.error(err);
         }
     };
 

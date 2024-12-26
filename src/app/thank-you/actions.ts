@@ -1,9 +1,12 @@
 'use server';
 
+import { getServerSession } from 'next-auth';
 import prisma from '../../../prisma/db';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 
 export const getPaymentStatus = async ({ orderId }: { orderId: string }) => {
-    const user = { id: '1', email: 'test' };
+    const session = await getServerSession(authOptions);
+    const user = session?.user;
 
     if (!user?.id || !user?.email) {
         throw new Error('You need to be logged in to view this page.');
@@ -27,7 +30,7 @@ export const getPaymentStatus = async ({ orderId }: { orderId: string }) => {
     });
 
     if (!order) {
-        throw new Error('This order does not not exist');
+        throw new Error('This order does not exist');
     }
 
     if (order.isPaid) {

@@ -3,6 +3,8 @@
 import { stripe } from '@/lib/stripe';
 import prisma from '../../../../prisma/db';
 import { BASE_PRICE } from '@/consts';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export const createCheckoutSession = async ({
     configId,
@@ -24,7 +26,12 @@ export const createCheckoutSession = async ({
         throw new Error('No such configuration found');
     }
 
-    const user = { id: '1' };
+    const session = await getServerSession(authOptions);
+    const user = session?.user;
+
+    if (!user) {
+        throw new Error('You need to be logged in');
+    }
 
     const { pillowFiller, pillowPackaging } = configuration;
 

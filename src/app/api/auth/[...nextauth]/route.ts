@@ -1,10 +1,15 @@
-import NextAuth from 'next-auth';
+import NextAuth, { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import prisma from '../../../../../prisma/db';
-// import { compare } from 'bcrypt';
+import { compare, hashSync } from 'bcrypt';
+import GoogleProvider from 'next-auth/providers/google';
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
     providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
@@ -26,11 +31,10 @@ const handler = NextAuth({
                     return null;
                 }
 
-                // const isPasswordValid = await compare(
-                //     credentials?.password,
-                //     user.password
-                // );
-                const isPasswordValid = credentials?.password === user.password;
+                const isPasswordValid = await compare(
+                    credentials?.password,
+                    user.password
+                );
 
                 if (!isPasswordValid) {
                     return null;
@@ -49,6 +53,35 @@ const handler = NextAuth({
         strategy: 'jwt',
     },
     callbacks: {
+        async signIn({ user, account }) {
+            try {
+                if (account?.provider === 'credentials') {
+                    return true;
+                }
+
+                if (!user.email) {
+                    return false;
+                }
+
+                const findUser = await prisma.user.findFirst({
+                    where: {
+                        email: user.email,
+                    },
+                });
+
+                if (findUser) return true;
+
+                await prisma.user.create({
+                    data: {
+                        email: user.email,
+                        password: hashSync(user.id, 10),
+                    },
+                });
+                return true;
+            } catch (err) {
+                console.error(err);
+            }
+        },
         async jwt({ token }) {
             const findUser = await prisma.user.findFirst({
                 where: {
@@ -61,7 +94,6 @@ const handler = NextAuth({
                 token.email = findUser.email;
                 token.role = findUser.role;
             }
-
             return token;
         },
         session({ session, token }) {
@@ -72,6 +104,8 @@ const handler = NextAuth({
             return session;
         },
     },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
