@@ -1,3 +1,4 @@
+import { OrderStatus } from '@prisma/client';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -24,6 +25,14 @@ export const formatPrice = (price: number) => {
         currency: 'USD',
     });
     return formatter.format(price);
+};
+
+export const normalizeOrderStatus = (name: OrderStatus) => {
+    return name
+        .replace('_', ' ')
+        .split(' ')
+        .map((word) => word[0].toUpperCase() + word.slice(1))
+        .join(' ');
 };
 
 export const base64ToBlob = (base64: string, type: string) => {

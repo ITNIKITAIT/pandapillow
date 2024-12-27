@@ -44,13 +44,24 @@ const Navbar = () => {
                                 </button>
                             </>
                         ) : (
-                            <button
-                                onClick={() => signOut({ redirect: false })}
-                                className={buttonVariants({
-                                    variant: 'ghost',
-                                })}>
-                                Sign out
-                            </button>
+                            <>
+                                <button
+                                    onClick={() => signOut({ redirect: false })}
+                                    className={buttonVariants({
+                                        variant: 'ghost',
+                                    })}>
+                                    Sign out
+                                </button>
+                                {session?.user.role === 'ADMIN' && (
+                                    <Link
+                                        href="/dashboard"
+                                        className={buttonVariants({
+                                            variant: 'ghost',
+                                        })}>
+                                        Dashboard ✨
+                                    </Link>
+                                )}
+                            </>
                         )}
 
                         <div className="hidden sm:block h-8 w-px bg-zinc-200"></div>
