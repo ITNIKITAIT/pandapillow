@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.text();
         console.log('body =  ' + body);
-        const signature = headers().get('stripe-sifnature');
+        const signature = headers().get('stripe-signature');
         console.log('signature =  ' + signature);
         if (!signature)
             return new Response('Invalid signature', { status: 400 });
