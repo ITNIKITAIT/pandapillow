@@ -27,10 +27,13 @@ export async function POST(req: NextRequest) {
                 throw new Error('Missing user email');
             }
 
+            console.log('session.metadata = ' + session.metadata);
             const { userId, orderId } = session.metadata || {
                 userId: null,
                 orderId: null,
             };
+            console.log('userId = ' + userId);
+            console.log('orderId = ' + orderId);
 
             if (!userId || !orderId) {
                 throw new Error('Invalid request metadata');
