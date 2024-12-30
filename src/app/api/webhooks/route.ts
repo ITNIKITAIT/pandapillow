@@ -7,8 +7,9 @@ import prisma from '../../../../prisma/db';
 export async function POST(req: NextRequest) {
     try {
         const body = await req.text();
+        console.log('body =  ' + body);
         const signature = headers().get('stripe-sifnature');
-
+        console.log('signature =  ' + signature);
         if (!signature)
             return new Response('Invalid signature', { status: 400 });
 
@@ -19,6 +20,7 @@ export async function POST(req: NextRequest) {
         );
 
         if (event.type === 'checkout.session.completed') {
+            console.log('completed');
             const session = event.data.object as Stripe.Checkout.Session;
 
             if (!session.customer_details?.email) {
