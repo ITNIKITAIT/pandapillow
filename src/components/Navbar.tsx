@@ -27,22 +27,13 @@ const Navbar = () => {
 
                     <div className="flex items-center gap-1 h-full sm:gap-5">
                         {!session ? (
-                            <>
-                                <button
-                                    onClick={onOpen}
-                                    className={buttonVariants({
-                                        variant: 'ghost',
-                                    })}>
-                                    Sign up
-                                </button>
-                                <button
-                                    onClick={onOpen}
-                                    className={buttonVariants({
-                                        variant: 'ghost',
-                                    })}>
-                                    Login
-                                </button>
-                            </>
+                            <button
+                                onClick={onOpen}
+                                className={buttonVariants({
+                                    variant: 'ghost',
+                                })}>
+                                Sign up
+                            </button>
                         ) : (
                             <>
                                 <button

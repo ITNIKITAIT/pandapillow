@@ -21,7 +21,7 @@ const AuthModal = ({
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-    const [type, setType] = useState<AuthModalType>('login');
+    const [type, setType] = useState<AuthModalType>('register');
 
     const onSwitchType = () => {
         setType(type === 'login' ? 'register' : 'login');
@@ -44,15 +44,8 @@ const AuthModal = ({
                         />
                     </div>
                     <DialogTitle className="text-3xl text-center font-bold tracking-tight text-gray-900">
-                        Log in to continue
+                        {type === 'login' ? 'Login' : 'Sign Up'}
                     </DialogTitle>
-                    <DialogDescription className="text-base text-center py-2">
-                        <span className="font-medium text-zinc-900">
-                            Your configuration was saved!
-                        </span>{' '}
-                        Please login or create an account to complete your
-                        purchase.
-                    </DialogDescription>
                 </DialogHeader>
 
                 {type === 'login' && <LoginForm onClose={onClose} />}
