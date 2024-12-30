@@ -80,6 +80,7 @@ export const authOptions: AuthOptions = {
                 return true;
             } catch (err) {
                 console.error(err);
+                return false;
             }
         },
         async jwt({ token }) {
