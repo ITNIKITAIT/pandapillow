@@ -46,11 +46,25 @@ function Pillow({
     useEffect(() => {
         if (userCanvas && scene) {
             const canvasTexture = new THREE.CanvasTexture(userCanvas);
+            // scene.traverse((node) => {
+            //     const mesh = node as THREE.Mesh;
+            //     if (mesh.isMesh) {
+            //         mesh.material.map = canvasTexture;
+            //         mesh.material.needsUpdate = true;
+            //     }
+            // });
             scene.traverse((node) => {
                 const mesh = node as THREE.Mesh;
                 if (mesh.isMesh) {
-                    mesh.material.map = canvasTexture;
-                    mesh.material.needsUpdate = true;
+                    if (Array.isArray(mesh.material)) {
+                        mesh.material.forEach((material) => {
+                            material.map = canvasTexture;
+                            material.needsUpdate = true;
+                        });
+                    } else {
+                        mesh.material.map = canvasTexture;
+                        mesh.material.needsUpdate = true;
+                    }
                 }
             });
 
@@ -64,9 +78,16 @@ function Pillow({
 
             scene.traverse((node) => {
                 const mesh = node as THREE.Mesh;
-                if (mesh.isMesh && mesh.material.map) {
-                    mesh.material.map.dispose();
-                    mesh.material.dispose();
+                if (mesh.isMesh) {
+                    if (Array.isArray(mesh.material)) {
+                        mesh.material.forEach((material) => {
+                            if (material.map) material.map.dispose();
+                            material.dispose();
+                        });
+                    } else {
+                        if (mesh.material.map) mesh.material.map.dispose();
+                        mesh.material.dispose();
+                    }
                 }
             });
         }
