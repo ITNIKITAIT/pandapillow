@@ -1,5 +1,6 @@
 import { OrderStatus } from '@prisma/client';
 import { clsx, type ClassValue } from 'clsx';
+import { Metadata } from 'next';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -65,3 +66,9 @@ export const FilledTexture = async (imageUrl: string) => {
 
     return canvas;
 };
+
+export const constructMetadata = (): Metadata => ({
+    title: 'PandaPillow',
+    description: 'Create your custom high-quality pillow in seconds',
+    icons: '/favicon.ico',
+});

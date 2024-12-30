@@ -178,7 +178,7 @@ const DesignConfigurator = ({ configId, imageUrl, imageSize }: Props) => {
                             <NextImage
                                 fill
                                 src={imageUrl}
-                                alt="your image"
+                                alt="custom image"
                                 className="pointer-events-none"
                             />
                         </div>
