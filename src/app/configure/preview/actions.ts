@@ -4,7 +4,7 @@ import { stripe } from '@/lib/stripe';
 import prisma from '../../../../prisma/db';
 import { BASE_PRICE } from '@/consts';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/auth-options';
 
 export const createCheckoutSession = async ({
     configId,

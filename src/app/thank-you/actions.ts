@@ -2,7 +2,7 @@
 
 import { getServerSession } from 'next-auth';
 import prisma from '../../../prisma/db';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '@/auth-options';
 
 export const getPaymentStatus = async ({ orderId }: { orderId: string }) => {
     const session = await getServerSession(authOptions);
