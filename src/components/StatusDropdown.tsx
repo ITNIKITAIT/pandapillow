@@ -22,7 +22,7 @@ const StatusDropdown = ({ id, orderStatus }: Props) => {
         mutationKey: ['change-order-status'],
         mutationFn: changeOrderStatus,
         onSuccess: () => {
-            queryClient.invalidateQueries(['all-orders']);
+            queryClient.invalidateQueries({ queryKey: ['all-orders'] });
         },
     });
 
