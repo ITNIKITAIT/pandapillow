@@ -75,7 +75,7 @@ export const createCheckoutSession = async ({
         },
         metadata: {
             userId: user.id,
-            order_id: order.id,
+            orderId: order.id,
         },
         line_items: [
             {
