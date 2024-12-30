@@ -7,9 +7,8 @@ import prisma from '../../../../prisma/db';
 export async function POST(req: NextRequest) {
     try {
         const body = await req.text();
-        console.log('body =  ' + body);
         const signature = headers().get('stripe-signature');
-        console.log('signature =  ' + signature);
+
         if (!signature)
             return new Response('Invalid signature', { status: 400 });
 
@@ -20,20 +19,16 @@ export async function POST(req: NextRequest) {
         );
 
         if (event.type === 'checkout.session.completed') {
-            console.log('completed');
             const session = event.data.object as Stripe.Checkout.Session;
 
             if (!session.customer_details?.email) {
                 throw new Error('Missing user email');
             }
 
-            console.log('session.metadata = ' + session.metadata);
             const { userId, orderId } = session.metadata || {
                 userId: null,
                 orderId: null,
             };
-            console.log('userId = ' + userId);
-            console.log('orderId = ' + orderId);
 
             if (!userId || !orderId) {
                 throw new Error('Invalid request metadata');

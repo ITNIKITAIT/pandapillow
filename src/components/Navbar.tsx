@@ -46,7 +46,7 @@ const Navbar = () => {
                         ) : (
                             <>
                                 <button
-                                    onClick={() => signOut({ redirect: false })}
+                                    onClick={() => signOut({ redirect: true })}
                                     className={buttonVariants({
                                         variant: 'ghost',
                                     })}>
